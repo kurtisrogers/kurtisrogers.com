@@ -1,0 +1,28 @@
+<section class="contact-form-section" aria-labelledby="contact-form-heading">
+  <div class="container">
+    <h2 id="contact-form-heading">{{ page.form.heading }}</h2>
+
+    <div id="contact-flash" aria-live="polite">
+      {% if flash %}
+        {% set type = flash.type %}{% set message = flash.message %}
+        {% include "organisms/flash-message/index.njk" %}
+      {% endif %}
+    </div>
+
+    <form
+      method="post"
+      action="/contact"
+      hx-post="/contact"
+      hx-target="#contact-flash"
+      hx-swap="innerHTML"
+    >
+      {% set id = "name" %}{% set name = "name" %}{% set label = page.form.nameLabel %}{% set required = true %}
+      {% include "molecules/form-field/index.njk" %}
+      {% set id = "email" %}{% set name = "email" %}{% set label = page.form.emailLabel %}{% set type = "email" %}{% set required = true %}
+      {% include "molecules/form-field/index.njk" %}
+      {% set id = "message" %}{% set name = "message" %}{% set label = page.form.messageLabel %}{% set type = "textarea" %}{% set rows = 6 %}{% set required = true %}
+      {% include "molecules/form-field/index.njk" %}
+      <button type="submit">{{ page.form.submitLabel }}</button>
+    </form>
+  </div>
+</section>

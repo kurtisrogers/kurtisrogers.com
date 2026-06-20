@@ -1,0 +1,11 @@
+<button
+  type="button"
+  class="theme-toggle"
+  @click="toggle()"
+  aria-label="Toggle color theme"
+  :aria-label="theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+>
+  <span class="visually-hidden">Toggle color theme</span>
+  <span x-show="theme === 'light'" aria-hidden="true">{% set name = "moon" %}{% include "atoms/icon/index.njk" %}</span>
+  <span x-show="theme === 'dark'" aria-hidden="true">{% set name = "sun" %}{% include "atoms/icon/index.njk" %}</span>
+</button>

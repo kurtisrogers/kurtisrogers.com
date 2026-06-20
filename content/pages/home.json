@@ -1,0 +1,23 @@
+{
+  "title": "Kurtis Rogers — Software Engineer",
+  "metaDescription": "Software engineer building accessible, maintainable web applications. Portfolio, experience, and contact.",
+  "hero": {
+    "heading": "Kurtis Rogers",
+    "subheading": "Software Engineer",
+    "tagline": "I build thoughtful, accessible web experiences with a focus on clarity and maintainability."
+  },
+  "introduction": {
+    "heading": "Introduction",
+    "body": "I'm a software engineer with a passion for crafting reliable, user-centred applications. I care deeply about accessibility, clean architecture, and shipping work that teams can maintain long after launch."
+  },
+  "honourableDeveloper": {
+    "heading": "An Honourable Developer",
+    "body": "Good engineering means more than shipping features. It means writing code others can read, designing systems that scale gracefully, and leaving every codebase a little better than you found it."
+  },
+  "cta": {
+    "heading": "Let's work together",
+    "body": "Interested in collaborating? I'd love to hear from you.",
+    "buttonText": "Get in touch",
+    "buttonHref": "/contact"
+  }
+}

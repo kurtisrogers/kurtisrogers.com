@@ -1,0 +1,7 @@
+{% extends "templates/base.njk" %}
+
+{% block content %}
+  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}
+  {% include "organisms/hero-banner/index.njk" %}
+  {% include "organisms/contact-form/index.njk" %}
+{% endblock %}

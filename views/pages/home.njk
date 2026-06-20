@@ -1,0 +1,27 @@
+{% extends "templates/base.njk" %}
+
+{% block content %}
+  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}{% set tagline = page.hero.tagline %}
+  {% include "organisms/hero-banner/index.njk" %}
+
+  {% if features.homeIntroduction %}
+    {% set id = "introduction" %}{% set heading = page.introduction.heading %}{% set body = page.introduction.body %}
+    {% include "organisms/content-section/index.njk" %}
+  {% endif %}
+
+  {% if features.homeHonourableDeveloper %}
+    {% set id = "honourable-developer" %}{% set heading = page.honourableDeveloper.heading %}{% set body = page.honourableDeveloper.body %}
+    {% include "organisms/content-section/index.njk" %}
+  {% endif %}
+
+  {% if features.hiringCta %}
+    {% include "organisms/hiring-cta/index.njk" %}
+  {% endif %}
+
+  <section class="content-section" aria-labelledby="home-cta-heading">
+    <div class="container">
+      {% set heading = page.cta.heading %}{% set body = page.cta.body %}{% set buttonHref = page.cta.buttonHref %}{% set buttonText = page.cta.buttonText %}
+      {% include "molecules/cta-group/index.njk" %}
+    </div>
+  </section>
+{% endblock %}

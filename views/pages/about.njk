@@ -1,0 +1,20 @@
+{% extends "templates/base.njk" %}
+
+{% block content %}
+  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}
+  {% include "organisms/hero-banner/index.njk" %}
+
+  {% if features.aboutTechnology %}
+    {% set id = "technology" %}{% set heading = page.technology.heading %}{% set body = page.technology.body %}
+    {% include "organisms/content-section/index.njk" %}
+  {% endif %}
+
+  {% if features.aboutCareer %}
+    {% set id = "career" %}{% set heading = page.career.heading %}{% set body = page.career.body %}
+    {% include "organisms/content-section/index.njk" %}
+  {% endif %}
+
+  {% if features.hiringCta %}
+    {% include "organisms/hiring-cta/index.njk" %}
+  {% endif %}
+{% endblock %}
