@@ -1,0 +1,11 @@
+<ul class="social-links" role="list">
+  {% for link in links %}
+  <li>
+    <a href="{{ link.href }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.label }}">
+      {% set name = link.icon %}
+      {% include "atoms/icon/index.njk" %}
+      <span class="visually-hidden">{{ link.label }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
