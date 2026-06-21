@@ -16,6 +16,7 @@
     "prepare": "husky",
     "sst:dev": "sst dev",
     "deploy": "sst deploy",
+    "deploy:staging": "sst deploy --stage staging",
     "deploy:prod": "sst deploy --stage production"
   },
   "dependencies": {

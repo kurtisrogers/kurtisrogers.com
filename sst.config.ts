@@ -1,5 +1,26 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
+const DOMAIN = "kurtisrogers.com";
+
+function stageDomain(stage: string) {
+  if (stage === "production") {
+    return {
+      name: DOMAIN,
+      redirects: [`www.${DOMAIN}`],
+      dns: sst.aws.dns(),
+    };
+  }
+
+  if (stage === "staging") {
+    return {
+      name: `staging.${DOMAIN}`,
+      dns: sst.aws.dns(),
+    };
+  }
+
+  return undefined;
+}
+
 export default $config({
   app(input) {
     return {
@@ -10,6 +31,10 @@ export default $config({
     };
   },
   async run() {
+    const stage = $app.stage;
+    const isProduction = stage === "production";
+    const domain = stageDomain(stage);
+
     const vpc = new sst.aws.Vpc("Vpc", { nat: "ec2" });
     const cluster = new sst.aws.Cluster("Cluster", { vpc });
 
@@ -25,10 +50,17 @@ export default $config({
       cpu: "0.25 vCPU",
       memory: "0.5 GB",
       loadBalancer: {
-        ports: [{ listen: "80/http", forward: "3000/http" }],
+        ...(domain ? { domain } : {}),
+        ports: domain
+          ? [
+              { listen: "80/http", redirect: "443/https" },
+              { listen: "443/https", forward: "3000/http" },
+            ]
+          : [{ listen: "80/http", forward: "3000/http" }],
       },
       environment: {
-        NODE_ENV: "production",
+        NODE_ENV: isProduction ? "production" : "staging",
+        APP_STAGE: stage,
         PORT: "3000",
         SMTP_HOST: smtpHost.value,
         SMTP_PORT: smtpPort.value,
@@ -56,6 +88,8 @@ export default $config({
 
     return {
       url: web.url,
+      domain: domain?.name,
+      stage,
     };
   },
 });

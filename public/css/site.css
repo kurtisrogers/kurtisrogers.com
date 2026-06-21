@@ -14,6 +14,15 @@ main {
   flex: 1;
 }
 
+.staging-banner {
+  background: #7a4f01;
+  color: #fff8e6;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 a {
   color: var(--link-color);
 }

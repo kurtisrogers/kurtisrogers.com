@@ -30,6 +30,7 @@ export function createApp() {
   });
 
   env.addFilter("markdown", (value: string) => renderMarkdown(value));
+  env.addGlobal("appStage", process.env.APP_STAGE ?? "development");
 
   app.set("view engine", "njk");
   app.disable("x-powered-by");

@@ -29,8 +29,8 @@ Visit [http://localhost:3000](http://localhost:3000).
 | `npm test` | Run Vitest + Supertest + axe-core tests |
 | `npm run typecheck` | Type-check without emitting |
 | `npm run sst:dev` | Run SST dev mode (proxies to local Express) |
-| `npm run deploy` | Deploy to AWS via SST (current stage) |
-| `npm run deploy:prod` | Deploy to the `production` stage |
+| `npm run deploy:staging` | Deploy to staging (`staging.kurtisrogers.com`) |
+| `npm run deploy:prod` | Deploy to production (`kurtisrogers.com`) |
 
 ## Pre-commit checks
 
@@ -107,33 +107,65 @@ Edit Markdown and restart the dev server — no rebuild required for content cha
 
 ## Deployment (SST + AWS)
 
-The app runs as a Docker container on ECS Fargate behind an Application Load Balancer. SST manages the VPC, cluster, service, and encrypted secrets.
+The app runs as a Docker container on ECS Fargate behind an Application Load Balancer. SST manages the VPC, cluster, service, HTTPS certificates, and Route 53 DNS records.
+
+### Environments
+
+| Stage | Domain | Command |
+|-------|--------|---------|
+| **staging** | `https://staging.kurtisrogers.com` | `npm run deploy:staging` |
+| **production** | `https://kurtisrogers.com` (redirects `www`) | `npm run deploy:prod` |
+
+Each stage is a separate SST stack (own VPC, cluster, and secrets). Staging shows a banner so you can tell it apart from production.
+
+DNS is managed automatically via **Route 53** (`sst.aws.dns()`). The domain `kurtisrogers.com` must be hosted in the same AWS account you deploy to. SST creates ACM certificates and the required A/AAAA/CNAME records on first deploy.
 
 ### Prerequisites
 
 1. [AWS credentials](https://sst.dev/docs/iam-credentials) configured (`aws configure` or env vars)
 2. Docker Desktop running
+3. `kurtisrogers.com` hosted zone in Route 53 in the target AWS account
 
 ### First-time secret setup
 
+Secrets are **per stage**. Set production secrets first, then staging (or use `--fallback` to inherit non-sensitive defaults):
+
 ```bash
+# Production
 npx sst secret set SmtpHost smtp.example.com --stage production
-npx sst secret set SmtpPort 587 --stage production
+npx sst secret set SmtpPort 587 --stage production --fallback
 npx sst secret set SmtpUser your-user --stage production
 npx sst secret set SmtpPass your-password --stage production
 npx sst secret set ContactTo hello@kurtisrogers.com --stage production
 npx sst secret set ContactFrom noreply@kurtisrogers.com --stage production
-```
 
-Use `--fallback` on non-sensitive values (e.g. port) so preview stages inherit defaults.
+# Staging (can use a mail catcher or the same provider with a staging inbox)
+npx sst secret set SmtpHost smtp.example.com --stage staging
+npx sst secret set SmtpUser your-user --stage staging
+npx sst secret set SmtpPass your-password --stage staging
+npx sst secret set ContactTo staging@kurtisrogers.com --stage staging
+npx sst secret set ContactFrom noreply@kurtisrogers.com --stage staging
+```
 
 ### Deploy
 
 ```bash
+# Staging first — verify at https://staging.kurtisrogers.com
+npm run deploy:staging
+
+# Production
 npm run deploy:prod
 ```
 
-SST prints the load balancer URL when complete. Point your domain's DNS at it, or add a custom domain in `sst.config.ts` later.
+First deploy per stage takes **10–20 minutes** (VPC, NAT, ALB, certificate validation, DNS). SST prints the URL when complete.
+
+### Tear down a stage
+
+```bash
+npx sst remove --stage staging
+```
+
+Production is protected from accidental removal (`protect: true` in `sst.config.ts`).
 
 ### Local dev with SST
 
@@ -145,7 +177,7 @@ This starts SST and proxies to `npm run dev` — useful when testing linked AWS 
 
 ### Estimated AWS cost
 
-Rough monthly minimum for a single small Fargate task with EC2 NAT: ~$15–25 (Fargate + NAT instance + ALB). Suitable for a low-traffic portfolio; scale `cpu`/`memory` in `sst.config.ts` if needed.
+Rough monthly minimum **per stage** for a single small Fargate task with EC2 NAT: ~$30/mo (Fargate + NAT instance + ALB). Running both staging and production doubles that unless you remove staging when not in use.
 
 ## Manual deployment (without SST)
 
