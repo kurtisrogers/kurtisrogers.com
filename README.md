@@ -11,6 +11,7 @@ Server-rendered personal portfolio built with Express, Nunjucks, Pico CSS, HTMX,
 ## Setup
 
 ```bash
+nvm use          # reads .nvmrc (Node 22 — matches Docker/CI)
 npm install
 cp .env.example .env
 npm run dev
