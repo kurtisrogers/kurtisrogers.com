@@ -17,10 +17,13 @@
     "sst:dev": "sst dev",
     "deploy": "sst deploy",
     "deploy:staging": "sst deploy --stage staging",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o storybook-static",
     "deploy:prod": "sst deploy --stage production"
   },
   "dependencies": {
     "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.7",
     "nunjucks": "^3.2.4",
@@ -28,6 +31,10 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-links": "^8.6.14",
+    "@storybook/html-vite": "^8.6.14",
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
     "@types/nodemailer": "^6.4.17",
@@ -37,9 +44,11 @@
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "sst": "^3.17.19",
+    "storybook": "^8.6.14",
     "supertest": "^7.1.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.1",
+    "vite": "^5.4.19"
   }
 }

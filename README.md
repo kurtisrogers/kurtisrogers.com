@@ -31,6 +31,32 @@ Visit [http://localhost:3000](http://localhost:3000).
 | `npm run sst:dev` | Run SST dev mode (proxies to local Express) |
 | `npm run deploy:staging` | Deploy to staging (`staging.kurtisrogers.com`) |
 | `npm run deploy:prod` | Deploy to production (`kurtisrogers.com`) |
+| `npm run storybook` | Component library at `http://localhost:6006` |
+| `npm run build-storybook` | Build static Storybook to `storybook-static/` |
+
+## Storybook
+
+Atomic Design components are documented in Storybook (Nunjucks templates rendered with mock data).
+
+```bash
+npm run storybook
+```
+
+**Live docs:** after merging to `main`, Storybook deploys to GitHub Pages at  
+`https://kurtisrogers.github.io/kurtisrogers.com/`
+
+Enable this once per repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+## CI workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `tests.yml` | Push / PR to `main` | Typecheck, build, and Vitest (Node 20 & 22) |
+| `storybook.yml` | Push / PR to `main` | Build Storybook; deploy to GitHub Pages on `main` |
+| `cursor-review.yml` | Pull requests | Cursor CLI review (requires `CURSOR_API_KEY` secret) |
+
+Add the Cursor API key: **Settings → Secrets → Actions → `CURSOR_API_KEY`**.  
+Get a key from [cursor.com/settings](https://cursor.com/settings).
 
 ## Pre-commit checks
 
