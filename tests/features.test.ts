@@ -14,7 +14,7 @@ describe("getFeatureFlags", () => {
 
   it("loads defaults from config file", () => {
     const flags = getFeatureFlags();
-    expect(flags.hiringCta).toBe(true);
+    expect(flags.hiringCta).toBe(false);
     expect(flags.homeIntroduction).toBe(true);
   });
 

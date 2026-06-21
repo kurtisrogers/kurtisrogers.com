@@ -10,7 +10,7 @@ introduction:
 honourableDeveloper:
   heading: How I Work
 cta:
-  heading: Let's work together
+  heading: Say hello
   buttonText: Get in touch
   buttonHref: /contact
 ---
@@ -33,4 +33,4 @@ I work well with designers, product owners, and stakeholders at every level: tra
 
 ## cta
 
-Interested in working together — on a product, a contract, or a conversation about frontend architecture and accessibility? I'd love to hear from you.
+Have a technical question or want to connect? Feel free to reach out.

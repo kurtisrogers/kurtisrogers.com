@@ -1,5 +1,5 @@
 {
-  "hiringCta": true,
+  "hiringCta": false,
   "homeIntroduction": true,
   "homeHonourableDeveloper": true,
   "aboutTechnology": true,
