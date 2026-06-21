@@ -1,0 +1,7 @@
+---
+heading: Open to opportunities
+buttonText: Contact me
+buttonHref: /contact
+---
+
+I'm currently open to new roles and freelance projects. If you think we'd be a good fit, let's talk.
