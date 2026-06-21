@@ -19,7 +19,7 @@ Server-rendered HTML via Express + Nunjucks.
 | Styling | Pico CSS v2 + custom tokens | Class-light, accessible defaults, tiny maintenance surface |
 | Interactivity | HTMX (contact form) + Alpine.js (UI state) | No SPA build step; progressive enhancement |
 | Email | nodemailer | User requirement |
-| Content | JSON files in `content/` | Edit text without touching templates |
+| Content | Markdown + YAML frontmatter in `content/` | Edit prose naturally; metadata stays structured |
 | Feature flags | `config/features.json` + `FEATURE_*` env overrides | Toggle sections at runtime without rebuild |
 | Tests | Vitest + Supertest + axe-core | Fast unit/API tests; automated a11y regression |
 

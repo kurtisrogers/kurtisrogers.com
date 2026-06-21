@@ -1,6 +1,6 @@
 <div class="cta-group">
   {% if heading %}<h2>{{ heading }}</h2>{% endif %}
-  {% if body %}<p>{{ body }}</p>{% endif %}
+  {% if body %}<div class="cta-body">{{ body | safe }}</div>{% endif %}
   {% if buttonHref and buttonText %}
     {% set href = buttonHref %}{% set label = buttonText %}{% set variant = "primary" %}
     {% include "atoms/button/index.njk" %}

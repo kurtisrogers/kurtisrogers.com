@@ -63,21 +63,36 @@ Set to `true` or `false`. Env vars win over the JSON file. Flags are cached for 
 
 ## Content editing
 
-Page copy lives in `content/pages/*.json`. Reusable sections (e.g. hiring CTA) live in `content/sections/`. Edit JSON and restart the dev server — no rebuild required for content changes.
+Page copy lives in `content/pages/*.md` with YAML frontmatter for metadata (title, headings, labels) and Markdown for prose. Reusable sections (e.g. hiring CTA) live in `content/sections/`.
 
-### Is JSON the right format?
+### File format
 
-JSON works well for this site today: the content is structured (headings, labels, short paragraphs), the schema is simple, and there is no build step. It is the same trade-off as the old SolidJS build — easy to parse, familiar to edit in any editor.
+Each page file has two parts:
 
-If you want a nicer authoring experience later, two upgrades fit this stack without adding a CMS:
+1. **Frontmatter** (between `---` markers) — structured fields: `title`, `hero`, `form` labels, button text, etc.
+2. **Body** — Markdown sections introduced by `## sectionKey` headers that match frontmatter keys
 
-| Format | Best for | Trade-off |
-|--------|----------|-----------|
-| **JSON** (current) | Short structured fields, feature flags, labels | Multi-line prose is awkward; no comments |
-| **YAML** | Same structure, easier paragraphs | Add a `yaml` parser; slightly less universal than JSON |
-| **Markdown + frontmatter** | Long-form About/Career copy | Best readability; needs `gray-matter` and a markdown filter in Nunjucks |
+Example from `content/pages/home.md`:
 
-Recommendation: **stay on JSON** until copy editing becomes painful, then move page bodies to `.md` files with YAML frontmatter for metadata. No need to change now.
+```markdown
+---
+title: Kurtis Rogers — Software Engineer
+introduction:
+  heading: Introduction
+---
+
+## introduction
+
+Your prose here. Supports **bold**, lists, and other standard Markdown.
+
+## honourableDeveloper
+
+Another section...
+```
+
+Pages with only frontmatter (e.g. `contact.md`) or a single body block (e.g. `not-found.md`) work without `##` section headers.
+
+Edit Markdown and restart the dev server — no rebuild required for content changes. Feature flags remain in `config/features.json`.
 
 ## Architecture
 

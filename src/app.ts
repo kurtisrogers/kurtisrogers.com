@@ -1,6 +1,7 @@
 import express from "express";
 import { join } from "node:path";
 import nunjucks from "nunjucks";
+import { renderMarkdown } from "./services/markdown.js";
 import { handleContactPost } from "./routes/contact.js";
 import { contactRateLimiter } from "./middleware/rate-limit.js";
 import {
@@ -28,14 +29,7 @@ export function createApp() {
     return date.toISOString();
   });
 
-  env.addFilter("markdown", (value: string) => {
-    if (!value) return "";
-    return value
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*(.+?)\*/g, "<em>$1</em>")
-      .replace(/\n\n/g, "</p><p>")
-      .replace(/\n/g, "<br>");
-  });
+  env.addFilter("markdown", (value: string) => renderMarkdown(value));
 
   app.set("view engine", "njk");
   app.disable("x-powered-by");
