@@ -42,7 +42,7 @@ describe("loadPageContent", () => {
     });
     const intro = page.introduction as { body: string };
     expect(intro.body).toContain("<p>");
-    expect(intro.body).toContain("user-centred");
+    expect(intro.body).toContain("Bristol");
   });
 
   it("loads not-found page with top-level body", () => {
@@ -55,7 +55,7 @@ describe("loadPageContent", () => {
 describe("loadHiringCta", () => {
   it("loads reusable section markdown", () => {
     const section = loadHiringCta();
-    expect(section.heading).toBe("Open to opportunities");
+    expect(section.heading).toBe("Open to the right opportunity");
     expect(section.body).toContain("<p>");
     expect(section.buttonHref).toBe("/contact");
   });

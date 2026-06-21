@@ -73,6 +73,6 @@ describe("feature flags", () => {
     process.env.FEATURE_HIRING_CTA = "false";
     clearFeatureFlagCache();
     const res = await request(app).get("/");
-    expect(res.text).not.toContain("Open to opportunities");
+    expect(res.text).not.toContain("Open to the right opportunity");
   });
 });
