@@ -1,6 +1,6 @@
 {
   "name": "kurtisrogers.com",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,27 +8,18 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "build": "tsx src/build.ts",
+    "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky",
-    "sst:dev": "sst dev",
-    "deploy": "sst deploy",
-    "deploy:staging": "sst deploy --stage staging",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static",
-    "deploy:prod": "sst deploy --stage production"
+    "generate:stories": "tsx scripts/generate-govuk-stories.ts",
+    "storybook": "npm run generate:stories && storybook dev -p 6006",
+    "build-storybook": "npm run generate:stories && storybook build -o storybook-static",
+    "build:site": "npm run build && npm run build-storybook && cp -r storybook-static dist/storybook"
   },
   "dependencies": {
     "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "gray-matter": "^4.0.3",
-    "marked": "^15.0.7",
-    "nunjucks": "^3.2.4",
-    "nodemailer": "^6.10.1",
-    "zod": "^3.24.2"
+    "govuk-frontend": "^6.3.0",
+    "nunjucks": "^3.2.4"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^8.6.14",
@@ -37,18 +28,10 @@
     "@storybook/html-vite": "^8.6.14",
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
-    "@types/nodemailer": "^6.4.17",
     "@types/nunjucks": "^3.2.6",
-    "@types/supertest": "^6.0.3",
-    "axe-core": "^4.10.3",
-    "husky": "^9.1.7",
-    "jsdom": "^26.0.0",
-    "sst": "^3.17.19",
     "storybook": "^8.6.14",
-    "supertest": "^7.1.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1",
     "vite": "^5.4.19"
   }
 }

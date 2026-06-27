@@ -1,19 +1,25 @@
 # kurtisrogers.com
 
-Server-rendered personal portfolio built with Express, Nunjucks, Pico CSS, HTMX, and Alpine.js.
+A simple server-rendered portfolio built with the [GOV.UK Design System](https://design-system.service.gov.uk/), [Nunjucks](https://mozilla.github.io/nunjucks/), and [Storybook](https://storybook.js.org/). The site pre-renders to static HTML for [GitHub Pages](https://pages.github.com/).
+
+## Live sites
+
+| Site | URL |
+|------|-----|
+| Portfolio | https://kurtisrogers.github.io/kurtisrogers.com/ |
+| Storybook (all GDS components) | https://kurtisrogers.github.io/kurtisrogers.com/storybook/ |
+
+Enable GitHub Pages once per repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
 ## Requirements
 
-- Node.js ≥ 20
-- Docker Desktop (for SST deployments)
-- AWS credentials configured locally (for SST)
+- Node.js ≥ 20 (see `.nvmrc` for the version used in CI)
 
 ## Setup
 
 ```bash
-nvm use          # reads .nvmrc (Node 22 — matches Docker/CI)
+nvm use
 npm install
-cp .env.example .env
 npm run dev
 ```
 
@@ -23,193 +29,61 @@ Visit [http://localhost:3000](http://localhost:3000).
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start dev server with hot reload |
-| `npm run build` | Compile TypeScript to `dist/` |
-| `npm start` | Run production server |
-| `npm test` | Run Vitest + Supertest + axe-core tests |
-| `npm run typecheck` | Type-check without emitting |
-| `npm run sst:dev` | Run SST dev mode (proxies to local Express) |
-| `npm run deploy:staging` | Deploy to staging (`staging.kurtisrogers.com`) |
-| `npm run deploy:prod` | Deploy to production (`kurtisrogers.com`) |
+| `npm run dev` | Start the Express SSR dev server |
+| `npm run build` | Pre-render portfolio pages to `dist/` |
+| `npm run build-storybook` | Build Storybook to `storybook-static/` |
+| `npm run build:site` | Build portfolio + Storybook into `dist/` (used in CI) |
 | `npm run storybook` | Component library at `http://localhost:6006` |
-| `npm run build-storybook` | Build static Storybook to `storybook-static/` |
+| `npm run generate:stories` | Regenerate GOV.UK component stories from package fixtures |
+| `npm run typecheck` | Type-check TypeScript sources |
 
 ## Storybook
 
-Atomic Design components are documented in Storybook (Nunjucks templates rendered with mock data).
+Every component shipped in `govuk-frontend` is documented in Storybook, using the official fixture data from the package. Stories are generated automatically:
 
 ```bash
 npm run storybook
 ```
 
-**Live docs:** after merging to `main`, Storybook deploys to GitHub Pages at  
-`https://kurtisrogers.github.io/kurtisrogers.com/`
+To refresh stories after upgrading `govuk-frontend`:
 
-Enable this once per repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-
-## CI workflows
-
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| `tests.yml` | Push / PR to `main` | Typecheck, build, and Vitest (Node 20 & 22) |
-| `storybook.yml` | Push / PR to `main` | Build Storybook; deploy to GitHub Pages on `main` |
-| `cursor-review.yml` | Pull requests | Cursor CLI review (requires `CURSOR_API_KEY` secret) |
-
-Add the Cursor API key: **Settings → Secrets → Actions → `CURSOR_API_KEY`**.  
-Get a key from [cursor.com/settings](https://cursor.com/settings).
-
-## Pre-commit checks
-
-[Husky](https://typicode.github.io/husky/) runs `typecheck` and `test` on every commit. After `npm install`, the `prepare` script wires this up automatically.
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `PORT` | No | Server port (default `3000`) |
-| `SMTP_HOST` | For contact | SMTP server hostname |
-| `SMTP_PORT` | For contact | SMTP port (e.g. `587`) |
-| `SMTP_USER` | For contact | SMTP username |
-| `SMTP_PASS` | For contact | SMTP password |
-| `CONTACT_TO` | For contact | Recipient email address |
-| `CONTACT_FROM` | For contact | Sender email address |
-
-## Feature Flags
-
-Defaults live in `config/features.json`. Override at runtime with environment variables:
-
-| Flag | Env override |
-|------|--------------|
-| `hiringCta` | `FEATURE_HIRING_CTA` |
-| `homeIntroduction` | `FEATURE_HOME_INTRODUCTION` |
-| `homeHonourableDeveloper` | `FEATURE_HOME_HONOURABLE_DEVELOPER` |
-| `aboutTechnology` | `FEATURE_ABOUT_TECHNOLOGY` |
-| `aboutCareer` | `FEATURE_ABOUT_CAREER` |
-
-Set to `true` or `false`. Env vars win over the JSON file. Flags are cached for 60 seconds.
-
-## Content editing
-
-Page copy lives in `content/pages/*.md` with YAML frontmatter for metadata (title, headings, labels) and Markdown for prose. Reusable sections (e.g. hiring CTA) live in `content/sections/`.
-
-### File format
-
-Each page file has two parts:
-
-1. **Frontmatter** (between `---` markers) — structured fields: `title`, `hero`, `form` labels, button text, etc.
-2. **Body** — Markdown sections introduced by `## sectionKey` headers that match frontmatter keys
-
-Example from `content/pages/home.md`:
-
-```markdown
----
-title: Kurtis Rogers — Software Engineer
-introduction:
-  heading: Introduction
----
-
-## introduction
-
-Your prose here. Supports **bold**, lists, and other standard Markdown.
-
-## honourableDeveloper
-
-Another section...
+```bash
+npm run generate:stories
 ```
-
-Pages with only frontmatter (e.g. `contact.md`) or a single body block (e.g. `not-found.md`) work without `##` section headers.
-
-Edit Markdown and restart the dev server — no rebuild required for content changes. Feature flags remain in `config/features.json`.
 
 ## Architecture
 
-- **Server:** Express 5 + TypeScript
-- **Templates:** Nunjucks with Atomic Design (`views/atoms`, `molecules`, `organisms`, `templates`, `pages`)
-- **Styling:** Pico CSS v2 + custom WCAG AAA tokens
-- **Interactivity:** HTMX (contact form) + Alpine.js (theme, mobile nav)
-- **Email:** nodemailer
-- **Tests:** Vitest, Supertest, axe-core
-- **Infra:** SST v3 on AWS (ECS Fargate + ALB)
+- **Local development:** Express 5 renders Nunjucks templates on each request (SSR)
+- **Production:** `src/build.ts` pre-renders pages to static HTML for GitHub Pages
+- **Templates:** Nunjucks with GOV.UK Frontend macros from `node_modules/govuk-frontend`
+- **Styling & scripts:** `govuk-frontend.min.css` and `govuk-frontend.min.js`
+- **Component docs:** Storybook 8 with `@storybook/html-vite`
 
-## Deployment (SST + AWS)
+## Project layout
 
-The app runs as a Docker container on ECS Fargate behind an Application Load Balancer. SST manages the VPC, cluster, service, HTTPS certificates, and Route 53 DNS records.
-
-### Environments
-
-| Stage | Domain | Command |
-|-------|--------|---------|
-| **staging** | `https://staging.kurtisrogers.com` | `npm run deploy:staging` |
-| **production** | `https://kurtisrogers.com` (redirects `www`) | `npm run deploy:prod` |
-
-Each stage is a separate SST stack (own VPC, cluster, and secrets). Staging shows a banner so you can tell it apart from production.
-
-DNS is managed automatically via **Route 53** (`sst.aws.dns()`). The domain `kurtisrogers.com` must be hosted in the same AWS account you deploy to. SST creates ACM certificates and the required A/AAAA/CNAME records on first deploy.
-
-### Prerequisites
-
-1. [AWS credentials](https://sst.dev/docs/iam-credentials) configured (`aws configure` or env vars)
-2. Docker Desktop running
-3. `kurtisrogers.com` hosted zone in Route 53 in the target AWS account
-
-### First-time secret setup
-
-Secrets are **per stage**. Set production secrets first, then staging (or use `--fallback` to inherit non-sensitive defaults):
-
-```bash
-# Production
-npx sst secret set SmtpHost smtp.example.com --stage production
-npx sst secret set SmtpPort 587 --stage production --fallback
-npx sst secret set SmtpUser your-user --stage production
-npx sst secret set SmtpPass your-password --stage production
-npx sst secret set ContactTo hello@kurtisrogers.com --stage production
-npx sst secret set ContactFrom noreply@kurtisrogers.com --stage production
-
-# Staging (can use a mail catcher or the same provider with a staging inbox)
-npx sst secret set SmtpHost smtp.example.com --stage staging
-npx sst secret set SmtpUser your-user --stage staging
-npx sst secret set SmtpPass your-password --stage staging
-npx sst secret set ContactTo staging@kurtisrogers.com --stage staging
-npx sst secret set ContactFrom noreply@kurtisrogers.com --stage staging
+```
+src/
+  server.ts          # SSR dev server
+  build.ts           # Static site generator
+  govuk/             # GOV.UK component helpers
+  config/site.ts     # Site metadata
+views/
+  layouts/base.njk   # GOV.UK page shell
+  pages/             # Portfolio pages
+stories/govuk/       # Storybook stories (generated + overview)
+scripts/             # Story generation
 ```
 
-### Deploy
+## Deployment
 
-```bash
-# Staging first — verify at https://staging.kurtisrogers.com
-npm run deploy:staging
+Pushes to `main` run `.github/workflows/pages.yml`, which:
 
-# Production
-npm run deploy:prod
-```
+1. Builds the portfolio with `BASE_PATH=/kurtisrogers.com/`
+2. Builds Storybook into `dist/storybook/`
+3. Deploys the combined `dist/` folder to GitHub Pages
 
-First deploy per stage takes **10–20 minutes** (VPC, NAT, ALB, certificate validation, DNS). SST prints the URL when complete.
+For a custom domain, configure it under **Settings → Pages** and update `src/config/site.ts`.
 
-### Tear down a stage
+## Licence
 
-```bash
-npx sst remove --stage staging
-```
-
-Production is protected from accidental removal (`protect: true` in `sst.config.ts`).
-
-### Local dev with SST
-
-```bash
-npm run sst:dev
-```
-
-This starts SST and proxies to `npm run dev` — useful when testing linked AWS resources.
-
-### Estimated AWS cost
-
-Rough monthly minimum **per stage** for a single small Fargate task with EC2 NAT: ~$30/mo (Fargate + NAT instance + ALB). Running both staging and production doubles that unless you remove staging when not in use.
-
-## Manual deployment (without SST)
-
-```bash
-npm run build
-NODE_ENV=production npm start
-```
-
-Set all SMTP variables in production for the contact form to work.
+This project uses [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend), which is available under the [MIT licence](https://github.com/alphagov/govuk-frontend/blob/main/LICENCE.txt).

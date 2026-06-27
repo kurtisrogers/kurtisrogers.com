@@ -1,6 +1,0 @@
-{
-  "permissions": {
-    "allow": ["Read", "Shell(gh)", "Shell(gh pr *)", "Shell(gh api *)"],
-    "deny": ["Write", "Shell(git push)", "Shell(git commit)"]
-  }
-}

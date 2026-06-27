@@ -2,23 +2,32 @@ import type { Preview } from "@storybook/html";
 
 const preview: Preview = {
   parameters: {
-    layout: "padded",
-    controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
-    a11y: {
-      test: "todo",
-    },
+    layout: "fullscreen",
+    controls: { hideNoControlsWarning: true },
+    a11y: { test: "todo" },
     options: {
       storySort: {
-        order: ["Atoms", "Molecules", "Organisms", "Pages"],
+        order: ["GOV.UK Design System", ["Overview", "*"]],
       },
     },
   },
   decorators: [
     (story) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "storybook-canvas";
-      wrapper.innerHTML = story();
-      return wrapper;
+      const frame = document.createElement("div");
+      frame.className =
+        "govuk-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-6";
+      frame.innerHTML = story();
+
+      queueMicrotask(() => {
+        const init = (
+          window as Window & {
+            GOVUKFrontend?: { initAll: (options?: { scope?: Element }) => void };
+          }
+        ).GOVUKFrontend?.initAll;
+        init?.({ scope: frame });
+      });
+
+      return frame;
     },
   ],
 };

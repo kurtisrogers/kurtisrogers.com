@@ -1,50 +1,28 @@
-import express from "express";
-import { join } from "node:path";
-import nunjucks from "nunjucks";
-import { renderMarkdown } from "./services/markdown.js";
-import { handleContactPost } from "./routes/contact.js";
-import { contactRateLimiter } from "./middleware/rate-limit.js";
-import {
-  renderAbout,
-  renderContact,
-  renderHome,
-  renderNotFound,
-} from "./routes/pages.js";
+import type { SiteConfig } from "./config/site.js";
+import { site } from "./config/site.js";
 
-export function createApp() {
-  const app = express();
-  const viewsPath = join(process.cwd(), "views");
-
-  const env = nunjucks.configure(viewsPath, {
-    autoescape: true,
-    express: app,
-    noCache: process.env.NODE_ENV !== "production",
-  });
-
-  env.addFilter("date", (value: string, format: string) => {
-    const date = value === "now" ? new Date() : new Date(value);
-    if (format === "Y") {
-      return String(date.getFullYear());
-    }
-    return date.toISOString();
-  });
-
-  env.addFilter("markdown", (value: string) => renderMarkdown(value));
-  env.addGlobal("appStage", process.env.APP_STAGE ?? "development");
-
-  app.set("view engine", "njk");
-  app.disable("x-powered-by");
-
-  app.use(express.static(join(process.cwd(), "public")));
-  app.use(express.urlencoded({ extended: false }));
-
-  app.get("/", renderHome);
-  app.get("/about", renderAbout);
-  app.get("/contact", renderContact);
-  app.post("/contact", contactRateLimiter, handleContactPost);
-  app.use((_req, res) => {
-    renderNotFound(_req, res);
-  });
-
-  return app;
+export interface PageContext {
+  site: SiteConfig;
+  basePath: string;
+  title: string;
+  activeNav?: string;
 }
+
+export function createPageContext(
+  title: string,
+  options: { activeNav?: string; basePath?: string } = {},
+): PageContext {
+  return {
+    site,
+    basePath: options.basePath ?? process.env.BASE_PATH ?? "/",
+    title,
+    activeNav: options.activeNav,
+  };
+}
+
+export const pages = [
+  { slug: "home", template: "pages/home.njk", output: "index.html", nav: "home" },
+  { slug: "about", template: "pages/about.njk", output: "about/index.html", nav: "about" },
+  { slug: "work", template: "pages/work.njk", output: "work/index.html", nav: "work" },
+  { slug: "contact", template: "pages/contact.njk", output: "contact/index.html", nav: "contact" },
+] as const;

@@ -1,20 +1,30 @@
-{% extends "templates/base.njk" %}
+{% from "details/macro.njk" import govukDetails %}
 
-{% block content %}
-  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}
-  {% include "organisms/hero-banner/index.njk" %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">About</h1>
 
-  {% if features.aboutTechnology %}
-    {% set id = "technology" %}{% set heading = page.technology.heading %}{% set body = page.technology.body %}
-    {% include "organisms/content-section/index.njk" %}
-  {% endif %}
+    <p class="govuk-body-l">
+      I'm a software engineer who cares about building services that work for everyone —
+      including people who use assistive technology or have slow connections.
+    </p>
 
-  {% if features.aboutCareer %}
-    {% set id = "career" %}{% set heading = page.career.heading %}{% set body = page.career.body %}
-    {% include "organisms/content-section/index.njk" %}
-  {% endif %}
+    <p class="govuk-body">
+      I enjoy working across the stack: from server-rendered pages and APIs to
+      component libraries and deployment pipelines. I favour clear conventions,
+      small focused changes, and tools that teams can maintain long after launch.
+    </p>
 
-  {% if features.hiringCta %}
-    {% include "organisms/hiring-cta/index.njk" %}
-  {% endif %}
-{% endblock %}
+    {{ govukDetails({
+      summaryText: "How I work",
+      html: "<p class=\"govuk-body\">I start with user needs, keep interfaces simple, and measure what matters. I write tests where they protect real behaviour, document decisions that aren't obvious from the code, and collaborate closely with designers and stakeholders.</p>"
+    }) }}
+
+    <h2 class="govuk-heading-l">Interests</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Accessible design systems</li>
+      <li>Static and server-rendered architectures</li>
+      <li>Developer experience and documentation</li>
+    </ul>
+  </div>
+</div>

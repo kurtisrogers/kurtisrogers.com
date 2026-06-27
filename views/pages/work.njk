@@ -1,0 +1,38 @@
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "tag/macro.njk" import govukTag %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Work</h1>
+
+    <p class="govuk-body-l">Selected projects and experience.</p>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: { text: "Portfolio (this site)" },
+          value: {
+            html: "<p class=\"govuk-body\">Server-rendered portfolio using GOV.UK Frontend, Nunjucks, and Storybook. Deployed to GitHub Pages.</p><p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://github.com/kurtisrogers/kurtisrogers.com\">View source on GitHub</a></p>"
+          }
+        },
+        {
+          key: { text: "Design system documentation" },
+          value: {
+            html: "<p class=\"govuk-body\">Component libraries documented in Storybook with accessibility checks and realistic fixtures.</p>"
+          }
+        },
+        {
+          key: { text: "Public sector digital services" },
+          value: {
+            html: "<p class=\"govuk-body\">Web applications built to GOV.UK Service Manual standards — inclusive, resilient, and easy to iterate.</p>"
+          }
+        }
+      ]
+    }) }}
+
+    {{ govukTag({ text: "TypeScript", classes: "govuk-!-margin-right-1" }) }}
+    {{ govukTag({ text: "Node.js", classes: "govuk-!-margin-right-1" }) }}
+    {{ govukTag({ text: "Accessibility", classes: "govuk-!-margin-right-1" }) }}
+    {{ govukTag({ text: "Storybook" }) }}
+  </div>
+</div>
