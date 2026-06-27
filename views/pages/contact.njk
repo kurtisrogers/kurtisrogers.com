@@ -1,7 +1,40 @@
-{% extends "templates/base.njk" %}
+{% from "inset-text/macro.njk" import govukInsetText %}
+{% from "button/macro.njk" import govukButton %}
 
-{% block content %}
-  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}
-  {% include "organisms/hero-banner/index.njk" %}
-  {% include "organisms/contact-form/index.njk" %}
-{% endblock %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Contact</h1>
+
+    <p class="govuk-body-l">The quickest way to reach me is by email.</p>
+
+    {{ govukInsetText({
+      text: "I aim to reply within a couple of working days."
+    }) }}
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email</dt>
+        <dd class="govuk-summary-list__value">
+          <a class="govuk-link" href="mailto:{{ site.email }}">{{ site.email }}</a>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">GitHub</dt>
+        <dd class="govuk-summary-list__value">
+          <a class="govuk-link" href="{{ site.github }}">github.com/kurtisrogers</a>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">LinkedIn</dt>
+        <dd class="govuk-summary-list__value">
+          <a class="govuk-link" href="{{ site.linkedin }}">linkedin.com/in/kurtisrogers</a>
+        </dd>
+      </div>
+    </dl>
+
+    {{ govukButton({
+      text: "Send an email",
+      href: "mailto:" + site.email
+    }) }}
+  </div>
+</div>

@@ -1,19 +1,12 @@
-import type { SiteConfig } from "../types/index.js";
-
-export const siteConfig: SiteConfig = {
+export const site = {
   name: "Kurtis Rogers",
-  url: "https://kurtisrogers.com",
+  title: "Kurtis Rogers — Software Engineer",
+  description:
+    "Software engineer building accessible, user-centred digital services.",
+  url: "https://kurtisrogers.github.io/kurtisrogers.com/",
   email: "hello@kurtisrogers.com",
-  social: [
-    {
-      label: "GitHub",
-      href: "https://github.com/Kurtmcmurt",
-      icon: "github",
-    },
-    {
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/kurtisrogers",
-      icon: "linkedin",
-    },
-  ],
-};
+  github: "https://github.com/kurtisrogers",
+  linkedin: "https://www.linkedin.com/in/kurtisrogers",
+} as const;
+
+export type SiteConfig = typeof site;

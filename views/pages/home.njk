@@ -1,27 +1,39 @@
-{% extends "templates/base.njk" %}
+{% from "panel/macro.njk" import govukPanel %}
+{% from "inset-text/macro.njk" import govukInsetText %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "button/macro.njk" import govukButton %}
 
-{% block content %}
-  {% set heading = page.hero.heading %}{% set subheading = page.hero.subheading %}{% set tagline = page.hero.tagline %}
-  {% include "organisms/hero-banner/index.njk" %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukPanel({
+      titleText: site.name,
+      html: "<p class=\"govuk-body-l\">Software engineer building accessible, user-centred digital services.</p>"
+    }) }}
 
-  {% if features.homeIntroduction %}
-    {% set id = "introduction" %}{% set heading = page.introduction.heading %}{% set body = page.introduction.body %}
-    {% include "organisms/content-section/index.njk" %}
-  {% endif %}
+    <h2 class="govuk-heading-l">About me</h2>
+    <p class="govuk-body">
+      I design and build reliable web applications with a focus on accessibility,
+      performance, and maintainable code. This portfolio is built with the
+      <a class="govuk-link" href="https://design-system.service.gov.uk/">GOV.UK Design System</a>.
+    </p>
 
-  {% if features.homeHonourableDeveloper %}
-    {% set id = "honourable-developer" %}{% set heading = page.honourableDeveloper.heading %}{% set body = page.honourableDeveloper.body %}
-    {% include "organisms/content-section/index.njk" %}
-  {% endif %}
+    {{ govukInsetText({
+      text: "Currently open to interesting engineering roles and freelance projects."
+    }) }}
 
-  {% if features.hiringCta %}
-    {% include "organisms/hiring-cta/index.njk" %}
-  {% endif %}
+    <h2 class="govuk-heading-l">Skills</h2>
+    {{ govukSummaryList({
+      rows: [
+        { key: { text: "Languages" }, value: { text: "TypeScript, JavaScript, HTML, CSS" } },
+        { key: { text: "Backend" }, value: { text: "Node.js, Express, REST APIs" } },
+        { key: { text: "Frontend" }, value: { text: "SSR, component libraries, accessibility" } },
+        { key: { text: "Practices" }, value: { text: "Testing, CI/CD, design systems" } }
+      ]
+    }) }}
 
-  <section class="content-section" aria-labelledby="home-cta-heading">
-    <div class="container">
-      {% set heading = page.cta.heading %}{% set body = page.cta.body %}{% set buttonHref = page.cta.buttonHref %}{% set buttonText = page.cta.buttonText %}
-      {% include "molecules/cta-group/index.njk" %}
+    <div class="govuk-button-group">
+      {{ govukButton({ text: "View my work", href: basePath + "work/" }) }}
+      {{ govukButton({ text: "Get in touch", href: basePath + "contact/", classes: "govuk-button--secondary" }) }}
     </div>
-  </section>
-{% endblock %}
+  </div>
+</div>

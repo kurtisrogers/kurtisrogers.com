@@ -1,11 +1,10 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
-<link rel="stylesheet" href="./css/tokens.css" />
-<link rel="stylesheet" href="./css/site.css" />
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
-<script defer src="./js/site.js"></script>
-<style>
-  .storybook-canvas {
-    width: 100%;
-    min-height: 2rem;
-  }
-</style>
+<link rel="stylesheet" href="/assets/govuk/govuk-frontend.min.css">
+<script>
+  document.documentElement.className += " govuk-template";
+  document.body.className = "govuk-template__body js-enabled govuk-frontend-supported";
+</script>
+<script type="module">
+  import { initAll } from "/assets/govuk/govuk-frontend.min.js";
+  window.GOVUKFrontend = { initAll };
+  initAll();
+</script>
