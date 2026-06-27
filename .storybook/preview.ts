@@ -1,4 +1,13 @@
 import type { Preview } from "@storybook/html";
+import { initAll } from "govuk-frontend/govuk-frontend.min.js";
+import "govuk-frontend/govuk-frontend.min.css";
+
+document.documentElement.classList.add("govuk-template");
+document.body.classList.add(
+  "govuk-template__body",
+  "js-enabled",
+  "govuk-frontend-supported",
+);
 
 const preview: Preview = {
   parameters: {
@@ -19,12 +28,7 @@ const preview: Preview = {
       frame.innerHTML = story();
 
       queueMicrotask(() => {
-        const init = (
-          window as Window & {
-            GOVUKFrontend?: { initAll: (options?: { scope?: Element }) => void };
-          }
-        ).GOVUKFrontend?.initAll;
-        init?.({ scope: frame });
+        initAll({ scope: frame });
       });
 
       return frame;
